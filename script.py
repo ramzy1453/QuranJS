@@ -1,32 +1,15 @@
-import subprocess
+import os
 
-def JavaScript(jsCode, variablesDict):
-    # Create a temporary file to hold the JavaScript code
-    with open('temp.js', 'w') as f:
-        f.write(jsCode)
+def replace_extensions(path):
+    for file in os.listdir(path):
+        file_path = os.path.join(path, file)
+        if os.path.isdir(file_path):
+            replace_extensions(file_path)
+        elif file_path.endswith('.ts'):
+            new_path = file_path[:-2] + 'js'
+            os.rename(file_path, new_path)
+        elif file_path.endswith('.tsx'):
+            new_path = file_path[:-3] + 'jsx'
+            os.rename(file_path, new_path)
 
-    # Construct the command to run the Node.js executable with the JavaScript file and variables
-    cmd = ['node', 'temp.js']
-    for key, value in variablesDict.items():
-        cmd.append(f'--{key}={value}')
-
-    # Run the command and capture the output
-    process = subprocess.run(cmd, capture_output=True, text=True)
-
-    # Delete the temporary file
-    subprocess.run(['rm', 'temp.js'])
-
-    # Return the output of the JavaScript code
-    return process.stdout.strip()
-
-
-
-result = JavaScript('''
-    function add(a, b) {
-        return a + b;
-    }
-    result = add(x, y);
-''', 
-    {'x': 2, 'y': 3}
-)
-print(result) 
+replace_extensions('.')
