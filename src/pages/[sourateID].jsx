@@ -12,7 +12,6 @@ export default function Sourate(props) {
 
   const arabic = useGetSourates(sourateID, "");
   const translated = useGetSourates(sourateID, "/" + edition);
-  console.log(arabic);
   const updateEdition = (e) => {
     setEdition("/" + e.target.value);
   };
